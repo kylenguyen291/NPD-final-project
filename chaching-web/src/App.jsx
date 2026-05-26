@@ -1,6 +1,23 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { AppProvider, useApp } from './context.jsx'
 import { CC } from './theme.js'
+
+// ─── Scale phone to always fit viewport ──────────────────────────
+function usePhoneScale() {
+  const PHONE_W = 402, PHONE_H = 874, PAD = 32
+  const [scale, setScale] = useState(1)
+  useEffect(() => {
+    const update = () => {
+      const sh = (window.innerHeight - PAD) / PHONE_H
+      const sw = (window.innerWidth  - PAD) / PHONE_W
+      setScale(Math.min(sh, sw, 1))
+    }
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
+  return scale
+}
 
 // ─── Direct imports (no lazy loading) ────────────────────────────
 import { OnbSplash, OnbHandle, OnbPIN, OnbGarden } from './screens/onboarding.jsx'
@@ -108,16 +125,19 @@ function Router() {
 
 // ─── App shell ────────────────────────────────────────────────────
 function AppShell() {
+  const scale = usePhoneScale()
   return (
     <div style={{
       width: '100%', height: '100vh',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      position: 'relative', overflow: 'hidden', gap: 32,
+      position: 'relative', overflow: 'hidden',
     }}>
       <DesktopBg />
-      <PhoneFrame>
-        <Router />
-      </PhoneFrame>
+      <div style={{ transform: `scale(${scale})`, transformOrigin: 'center center' }}>
+        <PhoneFrame>
+          <Router />
+        </PhoneFrame>
+      </div>
     </div>
   )
 }
