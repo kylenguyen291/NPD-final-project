@@ -1,12 +1,12 @@
 import React from 'react'
 import { CC } from '../theme.js'
 import { useApp } from '../context.jsx'
-import { Phone, TabBar, Card, CircleBtn } from '../components/index.jsx'
+import { Phone, TabBar, Card, CircleBtn, GardenStage, Meo, MeoChip } from '../components/index.jsx'
 
 // ─── 1. Profile Home ─────────────────────────────────────────────
 export function ProfileHome() {
   const { navigate, state } = useApp()
-  const { user } = state
+  const { user, meo } = state
 
   return (
     <Phone bg={CC.mint}>
@@ -50,6 +50,21 @@ export function ProfileHome() {
           </div>
         </Card>
 
+        {/* Mèo status card */}
+        <Card padding={14} radius={20} style={{ marginTop:12 }} onClick={() => navigate('MeoStatus')}>
+          <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+            <MeoChip coat={meo.coat} size={40} />
+            <div style={{ flex:1 }}>
+              <div style={{ fontSize:14, fontWeight:800 }}>{meo.name}</div>
+              <div style={{ fontSize:11, color:CC.ink3 }}>{meo.stage.charAt(0).toUpperCase()+meo.stage.slice(1)} · {user.xp.toLocaleString()} XP</div>
+            </div>
+            <div style={{ fontSize:12, color:CC.ink3, display:'flex', gap:4 }}>
+              {Array.from({ length: meo.umbrellas }).map((_,i) => <span key={i}>☂️</span>)}
+            </div>
+            <span style={{ color:CC.ink3 }}>›</span>
+          </div>
+        </Card>
+
         {/* Settings list */}
         <div style={{ marginTop:12, background:'#fff', borderRadius:20, overflow:'hidden' }}>
           {[
@@ -70,7 +85,7 @@ export function ProfileHome() {
         </div>
 
         <div style={{ marginTop:12, padding:14, textAlign:'center', fontSize:12, color:CC.ink3, marginBottom:16 }}>
-          Cha-Ching v1.0 · MVP · Made in 🇻🇳
+          Cha-Ching v2.0 · Made in 🇻🇳
         </div>
       </div>
       <TabBar active="profile"/>
@@ -78,7 +93,101 @@ export function ProfileHome() {
   )
 }
 
-// ─── 2. Certificates Wall ─────────────────────────────────────────
+// ─── 2. Mèo Status ───────────────────────────────────────────────
+export function MeoStatus() {
+  const { goBack, state } = useApp()
+  const { meo, user } = state
+
+  const stages = [
+    { name:'Baby',   xp:'0',  done:true,  current:false },
+    { name:'Junior', xp:'500',done:true,  current:false },
+    { name:'Adult',  xp:'2k', done:true,  current:true  },
+    { name:'Master', xp:'8k', done:false, current:false },
+  ]
+  const milestones = [
+    { d:'🔥 7',   l:'Week Warrior',  got: user.streak >= 7   },
+    { d:'🔥 30',  l:'Sparkle Mèo',   got: user.streak >= 30  },
+    { d:'🔥 100', l:'Gold tail',      got: user.streak >= 100 },
+    { d:'🔥 365', l:'Garden Sage',    got: user.streak >= 365 },
+  ]
+
+  // XP progress inside current stage
+  const stageMin = 2000, stageMax = 8000
+  const xpPct = Math.min(100, Math.round(((user.xp - stageMin) / (stageMax - stageMin)) * 100))
+
+  return (
+    <Phone bg={CC.mint}>
+      <div style={{ padding:'12px 16px 6px', display:'flex', alignItems:'center', gap:10, flexShrink:0 }}>
+        <CircleBtn onClick={goBack}>‹</CircleBtn>
+        <div style={{ flex:1, fontSize:17, fontWeight:800 }}>{meo.name}</div>
+      </div>
+
+      <div style={{ flex:1, overflow:'auto', padding:'0 16px' }}>
+        {/* Hero */}
+        <Card padding={0} radius={22} style={{ overflow:'hidden' }}>
+          <div style={{ position:'relative' }}>
+            <GardenStage height={170} coat={meo.coat} stage={meo.stage} mood={meo.mood} />
+            <div style={{ position:'absolute', top:10, right:10, display:'flex', alignItems:'center', gap:6, background:'#fff', padding:'6px 10px', borderRadius:999, boxShadow:'0 2px 6px rgba(27,34,24,.1)' }}>
+              <span style={{ fontSize:14 }}>🔥</span>
+              <span style={{ fontSize:14, fontWeight:800 }}>{user.streak}</span>
+            </div>
+          </div>
+          <div style={{ padding:'12px 16px' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+              <div style={{ fontSize:16, fontWeight:800 }}>{meo.stage.charAt(0).toUpperCase()+meo.stage.slice(1)} Mèo</div>
+              <div style={{ fontSize:11, fontWeight:700, color:CC.green, background:CC.mint, padding:'3px 8px', borderRadius:8 }}>{user.xp.toLocaleString()} XP</div>
+              <div style={{ marginLeft:'auto', display:'flex', alignItems:'center', gap:4, fontSize:12, fontWeight:700, color:CC.ink2 }}>
+                {Array.from({ length: meo.umbrellas }).map((_,i) => <span key={i}>☂️</span>)}
+                <span style={{ color:CC.ink3, fontWeight:600 }}>{meo.umbrellas} umbrella{meo.umbrellas!==1?'s':''}</span>
+              </div>
+            </div>
+            <div style={{ height:6, background:CC.mintDeep, borderRadius:3, marginTop:10, overflow:'hidden' }}>
+              <div style={{ width:`${xpPct}%`, height:'100%', background:CC.green }} />
+            </div>
+            <div style={{ fontSize:11, color:CC.ink3, marginTop:5 }}>{(stageMax - user.xp).toLocaleString()} XP to Master Mèo 👑</div>
+          </div>
+        </Card>
+
+        {/* Evolution */}
+        <div style={{ fontSize:12, fontWeight:700, color:CC.ink3, letterSpacing:1, marginTop:14 }}>EVOLUTION</div>
+        <div style={{ display:'flex', gap:8, marginTop:8 }}>
+          {stages.map((s, i) => (
+            <div key={i} style={{
+              flex:1, padding:'10px 4px', borderRadius:14, textAlign:'center',
+              background: s.current ? CC.green : '#fff',
+              color: s.current ? '#fff' : CC.ink,
+              border: `1px solid ${s.current ? 'transparent' : CC.line}`,
+              opacity: s.done || s.current ? 1 : .55,
+            }}>
+              <div style={{ fontSize:20 }}>{s.done && !s.current ? '✓' : s.name === 'Master' ? '👑' : '🐱'}</div>
+              <div style={{ fontSize:11, fontWeight:800, marginTop:2 }}>{s.name}</div>
+              <div style={{ fontSize:9, opacity:.7 }}>{s.xp} XP</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Streak milestones */}
+        <div style={{ fontSize:12, fontWeight:700, color:CC.ink3, letterSpacing:1, marginTop:14 }}>STREAK MILESTONES</div>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginTop:8, marginBottom:16 }}>
+          {milestones.map((m, i) => (
+            <div key={i} style={{
+              display:'flex', alignItems:'center', gap:10, padding:'10px 12px', borderRadius:14,
+              background:'#fff', border:`1px solid ${CC.line}`, opacity: m.got ? 1 : .6,
+            }}>
+              <div style={{ fontSize:16, fontWeight:800, color: m.got ? CC.coral : CC.ink3 }}>{m.d}</div>
+              <div style={{ flex:1, fontSize:12, fontWeight:700 }}>{m.l}</div>
+              <span style={{ fontSize:13 }}>{m.got ? '🏅' : '🔒'}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <TabBar active="profile"/>
+    </Phone>
+  )
+}
+
+// ─── 3. Certificates Wall ─────────────────────────────────────────
 export function CertificatesWall() {
   const { goBack } = useApp()
   return (

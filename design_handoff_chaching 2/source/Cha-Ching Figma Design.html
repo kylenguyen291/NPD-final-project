@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Cha-Ching — Figma Design</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body { background: #f0eee9; }
+  * { box-sizing: border-box; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="theme.jsx"></script>
+<script type="text/babel" src="meo.jsx"></script>
+<script type="text/babel" src="screens-wallet.jsx"></script>
+<script type="text/babel" src="screens-discover.jsx"></script>
+<script type="text/babel" src="screens-learn.jsx"></script>
+<script type="text/babel" src="screens-other.jsx"></script>
+<script type="text/babel" src="screens-v2-learn.jsx"></script>
+<script type="text/babel" src="screens-v2-discover.jsx"></script>
+
+<script type="text/babel">
+// ────────────────────────────────────────────────
+// Cha-Ching — Figma-style canvas
+// ────────────────────────────────────────────────
+
+const PHONE_W = 402;
+const PHONE_H = 874;
+
+function Frame({ children }) {
+  return (
+    <IOSDevice width={PHONE_W} height={PHONE_H}>
+      {children}
+    </IOSDevice>
+  );
+}
+
+// Title block for the whole document
+function CoverCard() {
+  return (
+    <div style={{
+      width: 480, height: PHONE_H, padding: 32,
+      background: '#fff',
+      fontFamily: '"Be Vietnam Pro", system-ui',
+      display: 'flex', flexDirection: 'column',
+    }}>
+      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 3, color: CC.green }}>
+        CHA-CHING · v2.0 REDESIGN
+      </div>
+      <div style={{
+        fontFamily: '"Caveat", cursive', fontSize: 60, color: CC.greenInk,
+        lineHeight: 1.05, marginTop: 14, marginBottom: 6, letterSpacing: -1,
+      }}>Two Clean Worlds,<br/>One Cat.</div>
+      <div style={{ fontSize: 14, color: CC.ink2, marginTop: 18, lineHeight: 1.55 }}>
+        A Vietnamese teen wallet (ages 12–18) that turns every money decision into a financial-literacy lesson. v2.0 adds <b>Mèo</b> the cat companion, daily streaks, a daily news engine with Ask Alex, and an 18-module learning pathway.
+      </div>
+
+      {/* Garden + Mèo inset */}
+      <div style={{
+        marginTop: 18, borderRadius: 18, overflow: 'hidden',
+        border: `1px solid ${CC.line}`,
+      }}>
+        <GardenStage height={150} coat="orange" stage="adult" mood="happy" />
+      </div>
+
+      {/* Palette */}
+      <div style={{ marginTop: 22 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, color: CC.ink3 }}>PALETTE</div>
+        <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+          <Swatch c={CC.green} l="Brand · #3F8E5C"/>
+          <Swatch c={CC.greenInk} l="Ink · #1F4A2E"/>
+          <Swatch c={CC.mint} l="Mint bg · #E8F4EA" dark/>
+          <Swatch c={CC.yellow} l="Reward · #F5D75A" dark/>
+          <Swatch c={CC.coral} l="Top spend · #E76F62"/>
+        </div>
+      </div>
+
+      {/* Type */}
+      <div style={{ marginTop: 18 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, color: CC.ink3 }}>TYPOGRAPHY</div>
+        <div style={{ marginTop: 6, fontFamily: '"Be Vietnam Pro"', fontSize: 22, fontWeight: 800, color: CC.greenInk, letterSpacing: -.3 }}>
+          Be Vietnam Pro — Hà Nội đến Sài Gòn
+        </div>
+        <div style={{ fontFamily: '"Be Vietnam Pro"', fontSize: 13, color: CC.ink2 }}>
+          400 / 500 / 700 / 800 · Full Vietnamese diacritics
+        </div>
+      </div>
+
+      {/* Principle */}
+      <div style={{
+        marginTop: 'auto', padding: 14, borderRadius: 14,
+        background: CC.mint, fontSize: 12, color: CC.greenInk, lineHeight: 1.5,
+      }}>
+        <b>Core principle.</b> The Wallet world is fast and transactional; the Learn world is playful and gamified. They never bleed — except the <b>🔥 streak chip</b>, the one sanctioned crossing, because streaks are identity.
+      </div>
+    </div>
+  );
+}
+
+function Swatch({ c, l, dark }) {
+  return (
+    <div style={{ flex: 1, borderRadius: 10, padding: 10, height: 64,
+      background: c, color: dark ? CC.ink : '#fff',
+      display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+      fontSize: 9, fontWeight: 700, letterSpacing: .3, lineHeight: 1.3,
+      border: c === CC.mint ? `1px solid ${CC.line}` : 'none',
+    }}>{l}</div>
+  );
+}
+
+// ────────────────────────────────────────────────
+// Canvas
+// ────────────────────────────────────────────────
+function App() {
+  return (
+    <DesignCanvas>
+      <DCSection id="overview" title="Overview" subtitle="Brand · system · principles">
+        <DCArtboard id="cover" label="Cover" width={480} height={PHONE_H}>
+          <CoverCard />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="onboarding" title="01 · Onboarding" subtitle="Splash → handle → PIN → garden intro · target: usable wallet in under 5 min">
+        <DCArtboard id="onb-splash" label="Splash" width={PHONE_W} height={PHONE_H}>
+          <Frame><OnbSplash/></Frame>
+        </DCArtboard>
+        <DCArtboard id="onb-handle" label="Pick handle" width={PHONE_W} height={PHONE_H}>
+          <Frame><OnbHandle/></Frame>
+        </DCArtboard>
+        <DCArtboard id="onb-pin" label="Set PIN" width={PHONE_W} height={PHONE_H}>
+          <Frame><OnbPIN/></Frame>
+        </DCArtboard>
+        <DCArtboard id="onb-garden" label="Garden intro" width={PHONE_W} height={PHONE_H}>
+          <Frame><OnbGarden/></Frame>
+        </DCArtboard>
+        <DCArtboard id="onb-adopt" label="Adopt your Mèo 🆕" width={PHONE_W} height={PHONE_H}>
+          <Frame><OnbAdoptMeo/></Frame>
+        </DCArtboard>
+
+        <DCPostIt top={-40} left={620} rotate={3}>
+          Block under-12 and over-18 with friendly screens; route Tier A vs Tier B by birth date.
+        </DCPostIt>
+        <DCPostIt top={PHONE_H + 30} left={1180} rotate={-2} width={220}>
+          v2.0 — Adopt Mèo sits between Garden intro and the top-up prompt. 4 coats · default name "Mèo Vàng".
+        </DCPostIt>
+      </DCSection>
+
+      <DCSection id="wallet" title="02 · Wallet" subtitle="Fast, clean, transactional. Feels like an adult tool.">
+        <DCArtboard id="wallet-home" label="Home" width={PHONE_W} height={PHONE_H}>
+          <Frame><WalletHome/></Frame>
+        </DCArtboard>
+        <DCArtboard id="scan-qr" label="Scan QR" width={PHONE_W} height={PHONE_H}>
+          <Frame><ScanQR/></Frame>
+        </DCArtboard>
+        <DCArtboard id="pay-confirm" label="Confirm pay" width={PHONE_W} height={PHONE_H}>
+          <Frame><PayConfirm/></Frame>
+        </DCArtboard>
+        <DCArtboard id="categorize" label="Categorize" width={PHONE_W} height={PHONE_H}>
+          <Frame><Categorize/></Frame>
+        </DCArtboard>
+        <DCArtboard id="spend-summary" label="Spending summary" width={PHONE_W} height={PHONE_H}>
+          <Frame><SpendingSummary/></Frame>
+        </DCArtboard>
+        <DCArtboard id="cat-detail" label="Category detail" width={PHONE_W} height={PHONE_H}>
+          <Frame><CategoryDetail/></Frame>
+        </DCArtboard>
+        <DCArtboard id="savings-goals" label="Savings goals" width={PHONE_W} height={PHONE_H}>
+          <Frame><SavingsGoals/></Frame>
+        </DCArtboard>
+        <DCArtboard id="topup" label="Top-up" width={PHONE_W} height={PHONE_H}>
+          <Frame><TopUp/></Frame>
+        </DCArtboard>
+
+        <DCPostIt top={-50} left={760} rotate={-2}>
+          Color band is RELATIVE, not threshold. 🔴 = highest this period. Never reads as "bad" — copy stays neutral.
+        </DCPostIt>
+        <DCPostIt top={PHONE_H + 30} left={460} rotate={1.5} width={210}>
+          The Categorize sheet is the most important moment in the whole app. One tap. AI does NOT pre-suggest.
+        </DCPostIt>
+      </DCSection>
+
+      <DCSection id="discover" title="03 · Discover" subtitle="v2.0 — mixed-format feed: video · news · poll · tip · mini-game · streak. Save = grow your Garden.">
+        <DCArtboard id="feed" label="Video card" width={PHONE_W} height={PHONE_H}>
+          <Frame><DiscoverFeed/></Frame>
+        </DCArtboard>
+        <DCArtboard id="news-card" label="News card 🆕" width={PHONE_W} height={PHONE_H}>
+          <Frame><NewsFeedCard/></Frame>
+        </DCArtboard>
+        <DCArtboard id="poll-card" label="Poll card 🆕" width={PHONE_W} height={PHONE_H}>
+          <Frame><PollCard/></Frame>
+        </DCArtboard>
+        <DCArtboard id="tip-card" label="Tip card 🆕" width={PHONE_W} height={PHONE_H}>
+          <Frame><TipCard/></Frame>
+        </DCArtboard>
+        <DCArtboard id="news-article" label="News article 🆕" width={PHONE_W} height={PHONE_H}>
+          <Frame><NewsArticle/></Frame>
+        </DCArtboard>
+        <DCArtboard id="ask-alex" label="Ask Alex explainer 🆕" width={PHONE_W} height={PHONE_H}>
+          <Frame><AskAlex/></Frame>
+        </DCArtboard>
+        <DCArtboard id="plus" label="Plus paywall 🆕" width={PHONE_W} height={PHONE_H}>
+          <Frame><PlusPaywall/></Frame>
+        </DCArtboard>
+        <DCArtboard id="quiz" label="Quiz pause (every 5 cards)" width={PHONE_W} height={PHONE_H}>
+          <Frame><QuizPause/></Frame>
+        </DCArtboard>
+        <DCArtboard id="cap" label="Daily cap end card" width={PHONE_W} height={PHONE_H}>
+          <Frame><DailyCap/></Frame>
+        </DCArtboard>
+
+        <DCPostIt top={-46} left={620} rotate={-3} width={220}>
+          Feed mix: 50% video · 20% news · 10% poll · 10% tip · 5% mini-game · 5% streak. Quiz pause every 5 cards.
+        </DCPostIt>
+        <DCPostIt top={PHONE_H + 30} left={1700} rotate={2} width={220}>
+          "Let Alex explain" deep-links to Learn. 1 free/day → Plus paywall at 39.000 ₫/mo. RAG-grounded in curriculum, never gives buy/sell advice.
+        </DCPostIt>
+      </DCSection>
+
+      <DCSection id="learn" title="04 · Learn" subtitle="v2.0 — Garden + Mèo + Daily Quest + 18-module pathway. Playful, gamified, narrative.">
+        <DCArtboard id="learn-home" label="Garden + Daily Quest 🆕" width={PHONE_W} height={PHONE_H}>
+          <Frame><LearnHomeV2/></Frame>
+        </DCArtboard>
+        <DCArtboard id="pillar-path" label="Module pathway 🆕" width={PHONE_W} height={PHONE_H}>
+          <Frame><PillarPath/></Frame>
+        </DCArtboard>
+        <DCArtboard id="checkpoint" label="Module Checkpoint 🆕" width={PHONE_W} height={PHONE_H}>
+          <Frame><ModuleCheckpoint/></Frame>
+        </DCArtboard>
+        <DCArtboard id="checkpoint-pass" label="Checkpoint cleared 🆕" width={PHONE_W} height={PHONE_H}>
+          <Frame><CheckpointPass/></Frame>
+        </DCArtboard>
+        <DCArtboard id="lesson-apply" label="Lesson complete · Apply Now" width={PHONE_W} height={PHONE_H}>
+          <Frame><LessonApply/></Frame>
+        </DCArtboard>
+        <DCArtboard id="alex" label="Alex chat" width={PHONE_W} height={PHONE_H}>
+          <Frame><AlexChat/></Frame>
+        </DCArtboard>
+        <DCArtboard id="game" label="Mini-game · Need vs Want" width={PHONE_W} height={PHONE_H}>
+          <Frame><NeedVsWant/></Frame>
+        </DCArtboard>
+
+        <DCPostIt top={-50} left={820} rotate={2} width={220}>
+          Each pillar = 3 modules of 3–4 lessons. Winding path, circular lesson nodes, octagonal gold checkpoint. Mèo walks at your current node.
+        </DCPostIt>
+        <DCPostIt top={PHONE_H + 30} left={460} rotate={-2} width={210}>
+          Checkpoint = 5 questions, pass 4/5 → +200 XP, Module Badge, Garden zone blooms, next module unlocks.
+        </DCPostIt>
+      </DCSection>
+
+      <DCSection id="profile" title="05 · Profile" subtitle="Avatar, Mèo status, achievements, settings">
+        <DCArtboard id="profile-home" label="Profile" width={PHONE_W} height={PHONE_H}>
+          <Frame><ProfileHome/></Frame>
+        </DCArtboard>
+        <DCArtboard id="meo-status" label="Mèo status 🆕" width={PHONE_W} height={PHONE_H}>
+          <Frame><MeoStatus/></Frame>
+        </DCArtboard>
+        <DCArtboard id="certs" label="Certificates" width={PHONE_W} height={PHONE_H}>
+          <Frame><CertificatesWall/></Frame>
+        </DCArtboard>
+
+        <DCPostIt top={-40} left={460} rotate={-2} width={210}>
+          Profile now shows Mèo's stage, umbrella inventory, evolution history & streak milestone badges. No parent dashboard in MVP.
+        </DCPostIt>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

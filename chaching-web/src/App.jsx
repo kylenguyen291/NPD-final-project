@@ -20,19 +20,22 @@ function usePhoneScale() {
 }
 
 // ─── Direct imports (no lazy loading) ────────────────────────────
-import { OnbSplash, OnbHandle, OnbPIN, OnbGarden } from './screens/onboarding.jsx'
+import { OnbSplash, OnbHandle, OnbPIN, OnbGarden, OnbAdoptMeo } from './screens/onboarding.jsx'
 import { WalletHome, ScanQR, PayConfirm, Categorize, SpendingSummary, CategoryDetail, SavingsGoals, TopUp } from './screens/wallet.jsx'
-import { DiscoverFeed, QuizPause, DailyCap } from './screens/discover.jsx'
-import { LearnHome, PillarDetail, LessonApply, AlexChat, NeedVsWant } from './screens/learn.jsx'
-import { ProfileHome, CertificatesWall } from './screens/profile.jsx'
+import { DiscoverFeed, QuizPause, DailyCap, NewsFeedCard, PollCard, TipCard, NewsArticle, AskAlex, PlusPaywall } from './screens/discover.jsx'
+import { LearnHome, PillarPath, LessonApply, AlexChat, ModuleCheckpoint, CheckpointPass } from './screens/learn.jsx'
+import { QuizScreen, QuizResult, BudgetBuilder, ScamSpotter, NeedVsWant } from './screens/games.jsx'
+import { ProfileHome, MeoStatus, CertificatesWall } from './screens/profile.jsx'
 
 const SCREENS = {
-  OnbSplash, OnbHandle, OnbPIN, OnbGarden,
+  OnbSplash, OnbHandle, OnbPIN, OnbGarden, OnbAdoptMeo,
   WalletHome, ScanQR, PayConfirm, Categorize,
   SpendingSummary, CategoryDetail, SavingsGoals, TopUp,
   DiscoverFeed, QuizPause, DailyCap,
-  LearnHome, PillarDetail, LessonApply, AlexChat, NeedVsWant,
-  ProfileHome, CertificatesWall,
+  NewsFeedCard, PollCard, TipCard, NewsArticle, AskAlex, PlusPaywall,
+  LearnHome, PillarPath, LessonApply, AlexChat, ModuleCheckpoint, CheckpointPass,
+  QuizScreen, QuizResult, BudgetBuilder, ScamSpotter, NeedVsWant,
+  ProfileHome, MeoStatus, CertificatesWall,
 }
 
 // ─── iPhone frame ─────────────────────────────────────────────────
@@ -85,11 +88,12 @@ function DesktopBg() {
 function SidePanel() {
   const { currentScreen, navigateTab } = useApp()
   const groups = [
-    { label: 'ONBOARDING', screens: [['OnbSplash','Splash'],['OnbHandle','Handle'],['OnbPIN','PIN'],['OnbGarden','Garden Intro']] },
+    { label: 'ONBOARDING', screens: [['OnbSplash','Splash'],['OnbHandle','Handle'],['OnbPIN','PIN'],['OnbGarden','Garden Intro'],['OnbAdoptMeo','Adopt Mèo 🐱']] },
     { label: 'WALLET',     screens: [['WalletHome','Home'],['ScanQR','Scan QR'],['PayConfirm','Pay Confirm'],['Categorize','Categorize'],['SpendingSummary','Spending'],['CategoryDetail','Category'],['SavingsGoals','Goals'],['TopUp','Top-up']] },
-    { label: 'DISCOVER',   screens: [['DiscoverFeed','Feed'],['QuizPause','Quiz'],['DailyCap','Daily Cap']] },
-    { label: 'LEARN',      screens: [['LearnHome','Garden + Pillars'],['PillarDetail','Pillar Detail'],['LessonApply','Lesson Apply'],['AlexChat','Alex Chat'],['NeedVsWant','Need vs Want 🎮']] },
-    { label: 'PROFILE',    screens: [['ProfileHome','Profile'],['CertificatesWall','Certificates']] },
+    { label: 'DISCOVER',   screens: [['DiscoverFeed','Video Feed'],['NewsFeedCard','News Card 📰'],['PollCard','Poll 📊'],['TipCard','Tip 💡'],['NewsArticle','Article'],['AskAlex','Ask Alex ☂️'],['PlusPaywall','Plus Paywall'],['QuizPause','Quiz Pause'],['DailyCap','Daily Cap']] },
+    { label: 'LEARN',      screens: [['LearnHome','Garden + Daily Quest'],['PillarPath','Pillar Path 🗺️'],['LessonApply','Lesson Apply'],['AlexChat','Alex Chat'],['ModuleCheckpoint','Checkpoint 🏅'],['CheckpointPass','Checkpoint Pass 🎉']] },
+    { label: 'GAMES',      screens: [['QuizScreen','Quiz 🧠'],['QuizResult','Quiz Result'],['BudgetBuilder','Budget Builder 💰'],['ScamSpotter','Scam Spotter 🛡️'],['NeedVsWant','Need vs Want 🎮']] },
+    { label: 'PROFILE',    screens: [['ProfileHome','Profile'],['MeoStatus','Mèo Status 🐱'],['CertificatesWall','Certificates']] },
   ]
   return (
     <div style={{ width: 220, color: 'rgba(255,255,255,.85)', fontSize: 12, display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingRight: 8 }}>

@@ -57,7 +57,21 @@ export function WalletHome() {
 
   return (
     <Phone bg={CC.mint}>
-      <CCHeader name={state.user.name} />
+      {/* v2 header with streak chip — the one sanctioned cross-world visual */}
+      <div style={{ display:'flex', alignItems:'center', padding:'14px 20px 6px', gap:10 }}>
+        <div onClick={() => navigate('ProfileHome')} style={{ width:38, height:38, borderRadius:19, background:'linear-gradient(135deg,#F5D75A,#E5B924)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, cursor:'pointer' }}>🧑‍🎓</div>
+        <div style={{ flex:1 }}>
+          <div style={{ fontSize:12, color:CC.ink3 }}>Xin chào</div>
+          <div style={{ fontSize:17, fontWeight:700, lineHeight:1.1 }}>{state.user.name} 👋</div>
+        </div>
+        {/* 🔥 streak chip — sanctioned cross-world visual from v2 spec */}
+        <div style={{ display:'flex', alignItems:'center', gap:5, background:'linear-gradient(135deg,#F5D75A,#E5B924)', padding:'6px 12px', borderRadius:999, boxShadow:'0 2px 8px rgba(229,185,36,.3)', cursor:'pointer' }} onClick={() => navigate('LearnHome')}>
+          <span style={{ fontSize:16 }}>🔥</span>
+          <span style={{ fontSize:14, fontWeight:800, color:CC.greenInk }}>{state.user.streak}</span>
+        </div>
+        <div style={{ width:8 }}/>
+        <div onClick={() => navigate('ProfileHome')} style={{ width:36, height:36, borderRadius:18, background:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, border:`1px solid ${CC.line}`, cursor:'pointer' }}>⚙️</div>
+      </div>
       <div style={{ flex:1, overflow:'auto', padding:'6px 16px 0' }}>
         {/* Balance hero */}
         <Card padding={18} radius={24} style={{ background:`linear-gradient(160deg,${CC.green} 0%,${CC.greenDeep} 100%)`, color:'#fff', boxShadow:'0 8px 24px rgba(63,142,92,.25)' }}>

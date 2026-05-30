@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { CC } from '../theme.js'
 import { useApp } from '../context.jsx'
-import { Phone, TabBar, Btn } from '../components/index.jsx'
+import { Phone, TabBar, Btn, CircleBtn, Placeholder, Meo, AlexAvatar } from '../components/index.jsx'
 
 // ─── 1. Discover Feed ─────────────────────────────────────────────
 export function DiscoverFeed() {
@@ -130,6 +130,271 @@ export function QuizPause() {
         <div style={{ position:'absolute', bottom:88, left:0, right:0, textAlign:'center', fontSize:12, color:'rgba(255,255,255,.65)' }}>⏱ 22s left · <span style={{ cursor:'pointer', textDecoration:'underline' }} onClick={() => navigate('DiscoverFeed')}>skip ›</span></div>
       </div>
       <TabBar active="discover"/>
+    </Phone>
+  )
+}
+
+// ─── 3a. News Feed Card ───────────────────────────────────────────
+export function NewsFeedCard() {
+  const { navigate } = useApp()
+  return (
+    <Phone bg="#F3EEDF">
+      <div style={{ flex:1, position:'relative', overflow:'hidden', padding:'8px 16px 0' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:8, padding:'6px 2px 12px' }}>
+          <span style={{ fontSize:16 }}>📰</span>
+          <span style={{ fontSize:13, fontWeight:800, color:CC.greenInk }}>Today's news</span>
+          <span style={{ marginLeft:'auto', fontSize:11, color:CC.ink3, fontWeight:600 }}>6:00 AM · 45s read</span>
+        </div>
+        <div style={{ background:'#fff', borderRadius:24, overflow:'hidden', boxShadow:'0 10px 30px rgba(120,100,40,.12)', border:'1px solid rgba(120,100,40,.1)' }}>
+          <Placeholder label="VNINDEX · MARKET PHOTO" height={170} />
+          <div style={{ padding:'16px 18px 18px' }}>
+            <div style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:11, fontWeight:700, color:CC.greenDeep, background:CC.mint, padding:'4px 10px', borderRadius:999 }}>📈 Markets · Vietstock</div>
+            <div style={{ fontSize:22, fontWeight:800, lineHeight:1.25, marginTop:12, color:CC.ink, letterSpacing:-.3 }}>
+              Why did gold prices surge this week?
+            </div>
+            <div style={{ fontSize:14, color:CC.ink2, marginTop:8, lineHeight:1.5 }}>
+              Gold crossed 92 million VND per lượng — here's what young people should understand about "safe havens".
+            </div>
+            <div style={{ marginTop:16 }}>
+              <Btn kind="primary" size="md" full onClick={() => navigate('NewsArticle')}>Read article · 45s →</Btn>
+            </div>
+          </div>
+        </div>
+        <div style={{ textAlign:'center', marginTop:18, fontSize:12, color:CC.ink3, fontWeight:600 }}>↑ Swipe up · 3 videos &amp; a poll next</div>
+      </div>
+      <TabBar active="discover" />
+    </Phone>
+  )
+}
+
+// ─── 3b. Poll Card ────────────────────────────────────────────────
+export function PollCard() {
+  const [voted, setVoted] = useState(null)
+  const opts = [
+    { label:'🍔 Food & Drink',    pct:38, lead:true  },
+    { label:'🛍️ Shopping',        pct:27, lead:false },
+    { label:'🎮 Games & apps',    pct:21, lead:false },
+    { label:'🚗 Getting around',  pct:14, lead:false },
+  ]
+  return (
+    <Phone bg="#16302A" style={{ color:'#fff' }}>
+      <div style={{ flex:1, position:'relative', overflow:'hidden', padding:'20px 20px 0' }}>
+        <div style={{ position:'absolute', inset:0, background:'radial-gradient(circle at 50% 24%, rgba(123,190,130,.28), transparent 55%)' }}/>
+        <div style={{ position:'relative' }}>
+          <div style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700, background:'rgba(255,255,255,.12)', padding:'5px 12px', borderRadius:999 }}>📊 Community poll</div>
+          <div style={{ fontSize:24, fontWeight:800, lineHeight:1.3, marginTop:16 }}>
+            Where does most of YOUR money go each month?
+          </div>
+          <div style={{ fontSize:12, opacity:.7, marginTop:6 }}>{voted ? 'You voted · ' : ''}4.182 teens answered</div>
+          <div style={{ display:'flex', flexDirection:'column', gap:10, marginTop:22 }}>
+            {opts.map((o, i) => (
+              <div key={i} onClick={() => !voted && setVoted(i)} style={{
+                position:'relative', borderRadius:14, overflow:'hidden',
+                background:'rgba(255,255,255,.1)',
+                border: o.lead ? `2px solid ${CC.yellow}` : '2px solid transparent',
+                cursor: voted ? 'default' : 'pointer',
+              }}>
+                {voted && <div style={{ position:'absolute', inset:0, width:`${o.pct}%`, background: o.lead ? 'rgba(245,215,90,.35)' : 'rgba(123,190,130,.3)' }}/>}
+                <div style={{ position:'relative', display:'flex', alignItems:'center', padding:'13px 14px' }}>
+                  <div style={{ flex:1, fontSize:15, fontWeight:700 }}>{o.label}</div>
+                  {voted && <div style={{ fontSize:15, fontWeight:800 }}>{o.pct}%</div>}
+                  {voted && o.lead && <span style={{ marginLeft:8 }}>✓</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+          {!voted && <div style={{ textAlign:'center', marginTop:18, fontSize:12, opacity:.7 }}>Tap to vote · +5 XP</div>}
+          {voted  && <div style={{ textAlign:'center', marginTop:18, fontSize:12, opacity:.7 }}>Save this to grow your Garden 🌱 · or swipe on</div>}
+        </div>
+      </div>
+      <TabBar active="discover" />
+    </Phone>
+  )
+}
+
+// ─── 3c. Tip Card ─────────────────────────────────────────────────
+export function TipCard() {
+  const [saved, setSaved] = useState(false)
+  return (
+    <Phone bg={CC.green} style={{ color:'#fff' }}>
+      <div style={{ flex:1, position:'relative', overflow:'hidden', display:'flex', flexDirection:'column', justifyContent:'center', padding:'0 30px' }}>
+        <div style={{ position:'absolute', top:50, right:36, fontSize:30, opacity:.25, transform:'rotate(12deg)' }}>💡</div>
+        <div style={{ position:'absolute', bottom:150, left:30, fontSize:24, opacity:.2 }}>✨</div>
+        <div style={{ fontSize:12, fontWeight:800, letterSpacing:2, opacity:.8 }}>TIP OF THE DAY</div>
+        <div style={{ fontSize:30, fontWeight:800, lineHeight:1.25, marginTop:14, letterSpacing:-.5 }}>
+          Pay yourself first. Move money to Save the <span style={{ color:CC.yellow }}>day</span> you get it — not what's left over.
+        </div>
+        <div style={{ fontSize:14, opacity:.85, marginTop:16, lineHeight:1.5 }}>
+          Future-you keeps 100% of the money present-you never sees.
+        </div>
+        <div style={{ display:'flex', gap:10, marginTop:28 }}>
+          <Btn kind="yellow" size="md" style={{ flex:1 }} onClick={() => setSaved(true)}>
+            {saved ? '✓ Saved to Garden' : '🔖 Save to Garden'}
+          </Btn>
+          <Btn kind="dark" size="md" style={{ flex:1, background:'rgba(255,255,255,.16)' }}>📤 Share</Btn>
+        </div>
+      </div>
+      <TabBar active="discover" />
+    </Phone>
+  )
+}
+
+// ─── 3d. News Article — full screen ───────────────────────────────
+export function NewsArticle() {
+  const { navigate, goBack } = useApp()
+  return (
+    <Phone bg="#fff">
+      <div style={{ flex:1, overflow:'auto', position:'relative' }}>
+        {/* Hero */}
+        <div style={{ position:'relative' }}>
+          <Placeholder label="GOLD BARS · HERO IMAGE" height={210} />
+          <div onClick={goBack} style={{ position:'absolute', top:12, left:12, width:36, height:36, borderRadius:18, background:'rgba(255,255,255,.9)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, cursor:'pointer' }}>‹</div>
+        </div>
+        {/* Body */}
+        <div style={{ padding:'16px 20px 100px' }}>
+          <div style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:11, fontWeight:700, color:CC.greenDeep, background:CC.mint, padding:'4px 10px', borderRadius:999 }}>📈 Markets · Vietstock</div>
+          <div style={{ fontSize:23, fontWeight:800, lineHeight:1.25, marginTop:12, letterSpacing:-.3 }}>
+            Why did gold prices surge this week?
+          </div>
+          <div style={{ fontSize:12, color:CC.ink3, marginTop:6 }}>Edited by Cha-Ching team · 30 May 2026</div>
+          <p style={{ fontSize:15, lineHeight:1.6, color:CC.ink, marginTop:14 }}>
+            This week, domestic gold prices crossed the 92 million VND per lượng mark for the first time. When global markets get volatile, many people turn to gold as a "safe haven."
+          </p>
+          <div style={{ fontSize:13, fontWeight:800, color:CC.greenInk, marginTop:12 }}>What does gold mean for young people?</div>
+          <p style={{ fontSize:15, lineHeight:1.6, color:CC.ink, marginTop:6 }}>
+            Gold doesn't generate interest like savings accounts, but it tends to hold its value when currency depreciates. That's why adults often buy gold to "store wealth."
+          </p>
+          <div style={{ fontSize:13, fontWeight:800, color:CC.greenInk, marginTop:12 }}>The key takeaway</div>
+          <p style={{ fontSize:15, lineHeight:1.6, color:CC.ink, marginTop:6 }}>
+            50,000 VND today doesn't buy what it did last year. Understanding inflation — and how assets like gold respond to it — is exactly why the Save and Invest pillars matter.
+          </p>
+        </div>
+      </div>
+      {/* Sticky action row */}
+      <div style={{ borderTop:`1px solid ${CC.line}`, background:'#fff', padding:'10px 16px 14px', display:'flex', alignItems:'center', gap:8, flexShrink:0 }}>
+        <div onClick={() => navigate('AskAlex')} style={{
+          flex:1, height:48, borderRadius:14, background:CC.green, color:'#fff',
+          display:'flex', alignItems:'center', justifyContent:'center', gap:8, fontWeight:800, fontSize:15, cursor:'pointer',
+        }}>☂️ Let Alex explain</div>
+        <CircleBtn size={48} bg={CC.mint}>🔖</CircleBtn>
+        <CircleBtn size={48} bg={CC.mint}>📤</CircleBtn>
+      </div>
+    </Phone>
+  )
+}
+
+// ─── 3e. Ask Alex — RAG explainer overlay ────────────────────────
+export function AskAlex() {
+  const { goBack, navigateTab } = useApp()
+  const [saved, setSaved] = useState(false)
+
+  return (
+    <Phone bg={CC.mint}>
+      {/* Faint learn tab underneath */}
+      <div style={{ padding:'12px 16px 0', opacity:.3, pointerEvents:'none' }}>
+        <div style={{ fontSize:21, fontWeight:800, color:CC.greenInk }}>Mèo Vàng's Garden</div>
+      </div>
+      <div style={{ flex:1, position:'relative' }}>
+        <div style={{ position:'absolute', inset:0, background:'rgba(14,20,16,.4)' }}/>
+        <div style={{
+          position:'absolute', bottom:0, left:0, right:0,
+          background:'#fff', borderRadius:'24px 24px 0 0',
+          padding:'12px 18px 20px', boxShadow:'0 -10px 40px rgba(0,0,0,.2)',
+          maxHeight:'88%', display:'flex', flexDirection:'column',
+        }}>
+          <div style={{ width:36, height:4, background:CC.lineHard, borderRadius:2, margin:'0 auto 12px' }}/>
+          {/* Alex header */}
+          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+            <AlexAvatar size={44} />
+            <div style={{ flex:1 }}>
+              <div style={{ fontSize:16, fontWeight:800 }}>Alex explains</div>
+              <div style={{ fontSize:11, color:CC.ink3 }}>📰 "Why did gold prices surge?"</div>
+            </div>
+            <div style={{ fontSize:10, fontWeight:700, color:CC.coral, background:'#FBE7E4', padding:'4px 8px', borderRadius:8 }}>1/1 free today</div>
+          </div>
+          {/* Grounded concept chips */}
+          <div style={{ display:'flex', gap:6, marginTop:12, flexWrap:'wrap' }}>
+            {['🐷 Saving vs. storing','🛡️ Inflation','🌳 Safe havens'].map(t => (
+              <div key={t} style={{ fontSize:11, fontWeight:700, color:CC.greenDeep, background:CC.mint, padding:'5px 10px', borderRadius:999, border:`1px solid ${CC.mintDeep}` }}>{t}</div>
+            ))}
+          </div>
+          {/* Bubbles */}
+          <div style={{ marginTop:12, display:'flex', flexDirection:'column', gap:8 }}>
+            {[
+              <>Gold rising means people want their money <b>safer</b> 🪙</>,
+              <>Remember the <b>Save</b> pillar? Gold is like a "vault" — it holds value, but <b>doesn't grow</b> like savings.</>,
+              <>I'm <b>not</b> saying to buy or sell gold — just explaining how it works 😺</>,
+            ].map((msg, i) => (
+              <div key={i} style={{ background:CC.mint, borderRadius:'16px 16px 16px 4px', padding:'10px 14px', fontSize:14, lineHeight:1.45, color:CC.ink, maxWidth:'92%' }}>{msg}</div>
+            ))}
+          </div>
+          {/* CTAs */}
+          <div style={{ display:'flex', flexDirection:'column', gap:8, marginTop:14 }}>
+            <div onClick={() => setSaved(true)} style={{
+              padding:'13px', borderRadius:12, background: saved ? CC.green : CC.mint,
+              border:`1.5px solid ${saved ? CC.green : CC.mintEdge}`,
+              textAlign:'center', fontSize:14, fontWeight:700, color: saved ? '#fff' : CC.greenInk, cursor:'pointer',
+            }}>
+              {saved ? '✓ Saved to Garden (+10 XP)' : '🌱 Save to Garden (+10 XP)'}
+            </div>
+            <div style={{ display:'flex', gap:8 }}>
+              <div onClick={goBack} style={{ flex:1, padding:'12px', borderRadius:12, background:'#fff', border:`1.5px solid ${CC.mintEdge}`, textAlign:'center', fontSize:13, fontWeight:700, color:CC.greenInk, cursor:'pointer' }}>Got it, thanks</div>
+              <div style={{ flex:1, padding:'12px', borderRadius:12, background:CC.mint, border:`1.5px solid ${CC.mintEdge}`, textAlign:'center', fontSize:13, fontWeight:700, color:CC.ink3 }}>🔒 Ask more · Plus</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Phone>
+  )
+}
+
+// ─── 3f. Plus Paywall ─────────────────────────────────────────────
+export function PlusPaywall() {
+  const { goBack } = useApp()
+  return (
+    <Phone bg={CC.greenInk} style={{ color:'#fff' }}>
+      <div style={{ flex:1, position:'relative', overflow:'hidden', padding:'16px 22px 0' }}>
+        <div style={{ position:'absolute', inset:0, background:'radial-gradient(circle at 50% 18%, rgba(245,215,90,.22), transparent 55%)' }}/>
+        <div style={{ position:'relative', display:'flex', flexDirection:'column', height:'100%' }}>
+          <div style={{ display:'flex', justifyContent:'flex-end' }}>
+            <CircleBtn bg="rgba(255,255,255,.15)" onClick={goBack}><span style={{ color:'#fff' }}>✕</span></CircleBtn>
+          </div>
+          {/* Master Mèo to sell aspiration */}
+          <div style={{ textAlign:'center', marginTop:4 }}>
+            <div style={{ display:'inline-block' }}>
+              <Meo coat="orange" stage="master" mood="happy" size={120} />
+            </div>
+            <div style={{ display:'inline-flex', alignItems:'center', gap:6, marginTop:4, background:'linear-gradient(135deg,#F5D75A,#E5B924)', color:CC.greenInk, padding:'6px 16px', borderRadius:999, fontSize:15, fontWeight:800 }}>✨ Cha-Ching Plus</div>
+            <div style={{ fontSize:22, fontWeight:800, marginTop:14, lineHeight:1.3, padding:'0 10px' }}>
+              You've used today's free Alex explainer
+            </div>
+            <div style={{ fontSize:13, opacity:.8, marginTop:6 }}>Go Plus for unlimited questions — and more.</div>
+          </div>
+          {/* Perks */}
+          <div style={{ marginTop:18, display:'flex', flexDirection:'column', gap:8 }}>
+            {[
+              { icon:'☂️', t:'Unlimited Ask Alex',        d:'Every article, every follow-up question' },
+              { icon:'⭐', t:'1.5× XP on Save to Garden', d:'Mèo grows faster'                       },
+              { icon:'🛡️', t:'3 starter umbrellas',       d:'Protect your streak'                    },
+            ].map(({ icon, t, d }) => (
+              <div key={t} style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 14px', borderRadius:14, background:'rgba(255,255,255,.08)' }}>
+                <div style={{ width:38, height:38, borderRadius:12, background:'rgba(245,215,90,.18)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:20 }}>{icon}</div>
+                <div style={{ flex:1 }}>
+                  <div style={{ fontSize:14, fontWeight:800 }}>{t}</div>
+                  <div style={{ fontSize:11, opacity:.75, marginTop:1 }}>{d}</div>
+                </div>
+                <span style={{ color:CC.yellow, fontSize:16 }}>✓</span>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop:'auto', paddingBottom:18, paddingTop:16 }}>
+            <Btn kind="yellow" size="lg" full>Start Plus · 39.000 ₫/mo</Btn>
+            <div style={{ textAlign:'center', fontSize:12, opacity:.7, marginTop:10, cursor:'pointer' }} onClick={goBack}>
+              Family plan 79.000 ₫/mo · up to 4 kids · Maybe later
+            </div>
+          </div>
+        </div>
+      </div>
     </Phone>
   )
 }

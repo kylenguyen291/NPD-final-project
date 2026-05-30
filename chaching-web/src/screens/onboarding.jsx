@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { CC, CCFont } from '../theme.js'
 import { useApp } from '../context.jsx'
-import { Phone, Btn, CircleBtn, ProgressBar, GardenScene, CCMark } from '../components/index.jsx'
+import { Phone, Btn, CircleBtn, ProgressBar, GardenScene, GardenStage, Meo, MeoChip, CCMark } from '../components/index.jsx'
 
 // ─── 1. Splash / Welcome ─────────────────────────────────────────
 export function OnbSplash() {
@@ -190,8 +190,80 @@ export function OnbGarden() {
           ))}
         </div>
         <div style={{ marginTop:'auto', paddingBottom:14, paddingTop:14 }}>
-          <Btn kind="primary" size="lg" full onClick={() => navigate('WalletHome')}>Explore my Garden  →</Btn>
+          <Btn kind="primary" size="lg" full onClick={() => navigate('OnbAdoptMeo')}>Meet your Mèo →</Btn>
         </div>
+      </div>
+    </Phone>
+  )
+}
+
+// ─── 5. Adopt your Mèo ───────────────────────────────────────────
+export function OnbAdoptMeo() {
+  const { navigate, dispatch } = useApp()
+  const coats = [
+    { id:'orange', label:'Cam (Orange)' },
+    { id:'tuxedo', label:'Mun (Tuxedo)' },
+    { id:'grey',   label:'Xám (Grey)'   },
+    { id:'calico', label:'Tam thể'       },
+  ]
+  const [sel, setSel] = useState('orange')
+  const [name, setName] = useState('Mèo Vàng')
+
+  const adopt = () => {
+    dispatch({ type:'ADOPT_MEO', coat:sel, name: name.trim() || 'Mèo Vàng' })
+    navigate('WalletHome')
+  }
+
+  return (
+    <Phone bg={CC.paper}>
+      <ProgressBar step={6} total={7} />
+      <div style={{ flex:1, padding:'12px 24px', display:'flex', flexDirection:'column', overflow:'auto' }}>
+        <div style={{ fontSize:24, fontWeight:800, letterSpacing:-.3 }}>Adopt your Mèo</div>
+        <div style={{ fontSize:14, color:CC.ink2, marginTop:4 }}>
+          Your cat lives in the Garden and grows as you learn. Pick a look.
+        </div>
+
+        {/* Live preview */}
+        <div style={{ marginTop:14, borderRadius:22, overflow:'hidden', border:`1px solid ${CC.line}` }}>
+          <GardenStage height={170} coat={sel} stage="baby" mood="happy" walk={false} />
+        </div>
+
+        {/* Coat picker */}
+        <div style={{ fontSize:13, fontWeight:700, color:CC.ink2, marginTop:16 }}>Coat colour</div>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:8, marginTop:8 }}>
+          {coats.map(c => (
+            <div key={c.id} onClick={() => setSel(c.id)} style={{
+              borderRadius:16, padding:'8px 4px', textAlign:'center', cursor:'pointer',
+              background: c.id === sel ? CC.mint : '#fff',
+              border: c.id === sel ? `2.5px solid ${CC.green}` : `1px solid ${CC.line}`,
+              transition:'all .15s',
+            }}>
+              <MeoChip coat={c.id} size={40} />
+              <div style={{ fontSize:10, fontWeight:700, marginTop:4, color:CC.ink2 }}>{c.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Name input */}
+        <div style={{ fontSize:13, fontWeight:700, color:CC.ink2, marginTop:16 }}>Name your Mèo</div>
+        <div style={{
+          marginTop:8, background:'#fff', borderRadius:16, padding:'0 16px',
+          display:'flex', alignItems:'center', gap:8,
+          border: `2px solid ${CC.green}`, boxShadow:'0 0 0 4px rgba(63,142,92,.12)',
+        }}>
+          <input
+            value={name}
+            onChange={e => setName(e.target.value.slice(0,16))}
+            style={{ flex:1, fontSize:18, fontWeight:700, padding:'14px 0', border:'none', outline:'none', background:'transparent', color:CC.ink, fontFamily:'inherit' }}
+          />
+          <span style={{ fontSize:11, color:CC.ink3 }}>{name.length}/16</span>
+        </div>
+      </div>
+
+      <div style={{ padding:'0 24px 18px', flexShrink:0 }}>
+        <Btn kind="primary" size="lg" full onClick={adopt}>
+          Adopt {name || 'Mèo Vàng'} 🐾
+        </Btn>
       </div>
     </Phone>
   )

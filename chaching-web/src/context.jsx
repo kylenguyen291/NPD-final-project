@@ -7,7 +7,13 @@ const initial = {
   params: {},
 
   // User
-  user: { name: 'Kyle', handle: 'kyle.long', avatar: '🧑‍🎓', age: 14, xp: 1240, streak: 12 },
+  user: { name: 'Kyle', handle: 'kyle.long', avatar: '🧑‍🎓', age: 14, xp: 3350, streak: 12 },
+
+  // Mèo companion (v2.0)
+  meo: { coat: 'orange', name: 'Mèo Vàng', stage: 'adult', mood: 'happy', umbrellas: 2 },
+
+  // Daily Quest (v2.0) — 3 tasks
+  dailyQuest: { watchedLesson: true, answeredQuiz: true, taggedEmotion: false },
 
   // Wallet
   wallet: {
@@ -95,6 +101,18 @@ function reducer(state, action) {
     }
     case 'SET_ACTIVE_PILLAR':
       return { ...state, activePillar: action.pillar }
+    case 'ADD_XP': {
+      return { ...state, user: { ...state.user, xp: state.user.xp + (action.amount || 0) } }
+    }
+    case 'ADOPT_MEO': {
+      return { ...state, meo: { ...state.meo, coat: action.coat, name: action.name || state.meo.name } }
+    }
+    case 'SET_MEO_MOOD': {
+      return { ...state, meo: { ...state.meo, mood: action.mood } }
+    }
+    case 'COMPLETE_QUEST_TASK': {
+      return { ...state, dailyQuest: { ...state.dailyQuest, [action.task]: true } }
+    }
     default:
       return state
   }
